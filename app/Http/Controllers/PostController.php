@@ -3,16 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Auth;
+use Exception;
 
 class PostController extends Controller
 {
-    //Retorna todos os resultados
+    //Retorna todos os resultados de acordo com o id do usuario logado
     public function index(){
-        return Post::all();
+        $user = auth()->user();
+        $user_id = $user->id;
+   
+        $retorno = Post::where('user_id', '=', $user_id)
+        ->get()
+        ->toJson(JSON_PRETTY_PRINT);
 
+        return response($retorno, 200);
     }
-
+    
     //Cria um novo dado
     public function store(Request $request){
         try{
@@ -20,9 +30,14 @@ class PostController extends Controller
             $post->title = $request->title;
             $post->body = $request->body;
 
-            if($post->save()){
+            $user = auth()->user();
+            $post->user_id = $user->id;
+          
+
+            if($post->save()){    
                 return response()->json(['status' => 'sucess','message' => 'Post created sucessfully']);
             }
+            
         }catch(Exception $e){
             return response()->json(['status' => 'error','message' => $e->getMessage()]);
         }
@@ -56,4 +71,5 @@ class PostController extends Controller
         }
     }
 }
+
 

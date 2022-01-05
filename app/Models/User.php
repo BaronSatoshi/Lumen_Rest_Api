@@ -39,4 +39,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function getJWTCustomClaims(){
         return [];
     }
+
+    protected $guarded = [];
+
+
+    public function post1(){
+        return $this->hasMany('App\Models\Post');
+    }
+
+    public function postUser(){
+        return $this->belongsToMany('App\Models\Post');
+    }
 }

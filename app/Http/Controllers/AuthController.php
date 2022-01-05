@@ -49,7 +49,9 @@ class AuthController extends Controller
         }
     }
 
-    public function login(Request $email, Request $password){
+    public function login(Request $request){ //Request $email, Request $password
+        $email = $request->email;
+        $password = $request->password;
 
         //check if field is empty
         if(empty($email) or empty($password)){
