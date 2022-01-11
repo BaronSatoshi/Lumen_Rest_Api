@@ -13,16 +13,24 @@ class PostController extends Controller
 {
     //Retorna todos os resultados de acordo com o id do usuario logado
     public function index(){
-        $user = auth()->user();
-        $user_id = $user->id;
-   
-        $retorno = Post::where('user_id', '=', $user_id)
-        ->get()
-        ->toJson(JSON_PRETTY_PRINT);
-
-        return response($retorno, 200);
+        try{
+            $user = auth()->user();
+            $user_id = $user->id;
+       
+            $retorno = Post::where('user_id', '=', $user_id)
+            ->get()
+            ->toJson(JSON_PRETTY_PRINT);
+            
+            
+            return response($retorno, 200);
+        }catch(Exception $e){
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+       
     }
+
     
+
     //Cria um novo dado
     public function store(Request $request){
         try{
