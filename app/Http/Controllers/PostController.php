@@ -21,7 +21,6 @@ class PostController extends Controller
             ->get()
             ->toJson(JSON_PRETTY_PRINT);
             
-            
             return response($retorno, 200);
         }catch(Exception $e){
             return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
@@ -29,7 +28,28 @@ class PostController extends Controller
        
     }
 
+    //Função para fazer uma busca por um dado especifico, caso não queira buscar nada ou não tenha o dado, ele irá trazer todos os dados 
+    public function Search($search){
+        try{
+            $user = auth()->user();
+            $user_id = $user->id;
+            if($search){
+                $retorno = Post::where([
+                    ['user_id', '=', $user_id],
+                    ['title', 'like', '%'.$search.'%']
+                ])->get();
     
+            }else{
+                $retorno = Post::where('user_id', '=', $user_id)
+                ->get()
+                ->toJson(JSON_PRETTY_PRINT);
+            }
+            return response($retorno, 200);
+        }catch(Exception $e){
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+        
+    }
 
     //Cria um novo dado
     public function store(Request $request){
@@ -41,7 +61,6 @@ class PostController extends Controller
             $user = auth()->user();
             $post->user_id = $user->id;
           
-
             if($post->save()){    
                 return response()->json(['status' => 'sucess','message' => 'Post created sucessfully']);
             }

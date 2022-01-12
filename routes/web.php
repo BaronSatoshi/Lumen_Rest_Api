@@ -24,6 +24,7 @@ $router->group(['prefix' => 'api'], function() use ($router){
     $router->group(['middleware' => 'auth'], function () use ($router){
         $router->post('/logout', 'AuthController@logout');
         $router->get('/posts', 'PostController@index');
+        $router->get('/posts/{search}', 'PostController@Search');
         $router->post('/posts', 'PostController@store');
         $router->put('/posts/{id}', 'postController@update');
         $router->delete('/posts/{id}', 'postController@destroy');
