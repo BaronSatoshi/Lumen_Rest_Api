@@ -44,7 +44,13 @@ class PostController extends Controller
                 ->get()
                 ->toJson(JSON_PRETTY_PRINT);
             }
-            return response($retorno, 200);
+            if($retorno == "[]"){
+                return response()->json(['status' => 'error'], 404);
+                
+            }else{
+                return response($retorno, 200);
+            }
+            
         }catch(Exception $e){
             return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
         }
